@@ -3,9 +3,20 @@ FROM ruby:2.6
 LABEL maintainer=meel.tomlinson@gmail.com
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
- nodejs \
- npm -y \
- && npm install --global yarn
+ apt-transport-https
+
+# Ensures up to date version of Node
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+
+# Ensure lates packages of yarn
+Run curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+Run echo "deb https://dl.yarnpkg.com/debian/ stable main" | \
+  tee /etc/apt/sources.list.d/yarn.list
+
+# Install packages
+RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
+  nodejs \
+  yarn
 
 COPY Gemfile* /usr/src/app/
 
@@ -14,6 +25,6 @@ RUN bundle install
 
 COPY . /usr/src/app/
 
-RUN rails webpacker:install
+# RUN rails webpacker:install
 
 CMD ["rails", "s", "-b", "0.0.0.0"] 
