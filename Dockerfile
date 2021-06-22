@@ -15,6 +15,7 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | \
 
 # Install packages
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
+  netcat \
   nodejs \
   yarn
 
@@ -29,6 +30,8 @@ RUN bundle install
 COPY . /usr/src/app/
 
 # RUN rails webpacker:install
+
+RUN ["chmod", "+x", "/usr/src/app/wait-for"]
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
