@@ -8,20 +8,19 @@ services:
     ports:
       - "80:3000"
     env_file:
-      - .env/development/database
-      - .env/development/web
+      - .env/production/database
+      - .env/production/web
     depends_on:
       - database
 
   db-migrator:
     image: bigmeel94/myapp_web:prod
-    command: ["rails", "db:migrate"]
+    command: ["bin/rails", "db:migrate"]
     env_file:
       - .env/production/database
       - .env/production/web
     depends_on:
       - database
-  
 
   redis:
     image: redis
@@ -29,7 +28,7 @@ services:
   database:
     image: postgres
     env_file:
-      - .env/development/database
+      - .env/production/database
     volumes:
       - db_data:/var/lib/postgresql/data
   
